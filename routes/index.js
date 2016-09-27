@@ -8,7 +8,7 @@ router.get('/', function(req, res, next) {
   res.render('index', { title: 'Express' });
 });
 
-router.get('/account', ensureAuthenticated, function(req, res) {
+router.get('/account', auth.ensureAuthenticated, function(req, res) {
     res.json(req.body);
 });
 
@@ -18,16 +18,16 @@ router.get('/login', function(req, res) {
     });
 });
 
-router.get('/auth/google', passport.authenticate('google', {
+router.get('/auth/google', auth.passport.authenticate('google', {
     scope: [
-        'profile', 'email', 'https://www.googleapis.com/auth/plus.profile.emails.read', 'https://www.googleapis.com/auth/plus.profile.emails.read'
+        'profile', 'email', 'https://www.googleapis.com/auth/plus.profile.emails.read'
     ],
     accessType: 'offline',
     approvalPrompt: 'force'
 }));
 
 router.get('/auth/google/callback',
-    passport.authenticate('google', {
+    auth.passport.authenticate('google', {
         successRedirect: '/account',
         failureRedirect: '/login'
       }
