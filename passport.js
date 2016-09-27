@@ -37,10 +37,10 @@ passport.use(new GoogleStrategy({
                             email: profile.emails[0].value,
                             photo: profile.photos[0].value
                         })
-                        .then(() => {
-                            return true
+                        .then((noflexzone) => {
+                            return done (null, profile)
                         })
-                    console.log(profile)
+                    //console.log(profile)
                 }
             })
 
@@ -48,7 +48,7 @@ passport.use(new GoogleStrategy({
         // represent the logged-in user.  In a typical application, you would want
         // to associate the Google account with a user record in your database,
         // and return that user instead.
-        return done(null, profile);
+        // return done(null, profile);
 
     }
 ));
@@ -59,6 +59,7 @@ module.exports = {
   //route middleware to ensure user is authenticated
   ensureAuthenticated: function(req, res, next) {
     if (req.isAuthenticated()) {
+      console.log('user is authenticated')
         return next();
     } else {
         console.log('ensure authenticated didnt work')
