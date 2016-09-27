@@ -19,7 +19,8 @@ var GOOGLE_CLIENT_ID = "846943741871-q6ec50gbaeav9qhlfig6npoi0kcjrf5h.apps.googl
 passport.use(new GoogleStrategy({
         clientID: GOOGLE_CLIENT_ID,
         clientSecret: GOOGLE_CLIENT_SECRET,
-        callbackURL: "http://localhost:3000/auth/google/callback",
+        callbackURL: "https://oauthtakethree.herokuapp.com/auth/google/callback",
+        // "http://localhost:3000/auth/google/callback" || 
         passReqToCallback: true
     },
     function(request, accessToken, refreshToken, profile, done) {
