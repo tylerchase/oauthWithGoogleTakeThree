@@ -1,10 +1,10 @@
 var knex = require('./knex_config.js')
 
+var getAllUsers = function(){
+  return knex('users')
+}
 module.exports = {
-  getAllUsers : function(){
-    return knex('users')
-  },
-  getAllUsersByIdAndGoogleProfileId : function(id){
+  getAllUsersByIdAndGoogleProfileId : function(){
     getAllUsers().where('id', profile.id)
   }
 

@@ -20,7 +20,8 @@ router.get('/login', function(req, res) {
 
 router.get('/auth/google', auth.passport.authenticate('google', {
     scope: [
-        'profile', 'email', 'https://www.googleapis.com/auth/plus.profile.emails.read'
+        'profile', 'email',
+        //'https://www.googleapis.com/auth/plus.profile.emails.read'
     ],
     accessType: 'offline',
     approvalPrompt: 'force'

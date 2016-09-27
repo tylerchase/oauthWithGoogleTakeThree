@@ -1,6 +1,8 @@
 var queries = require('./db/queries.js');
 var passport = require('passport')
-var GoogleStrategy = require('passport-google-oauth2').Strategy;
+// var GoogleStrategy = require('passport-google-oauth2').Strategy;
+var GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
+var knex = require('./db/knex_config')
 require('dotenv').config()
 
 passport.serializeUser(function(user, done) {
@@ -11,21 +13,24 @@ passport.deserializeUser(function(obj, done) {
     done(null, obj);
 });
 
+var GOOGLE_CLIENT_ID = "846943741871-q6ec50gbaeav9qhlfig6npoi0kcjrf5h.apps.googleusercontent.com",
+    GOOGLE_CLIENT_SECRET = "Z65eW_mtGO7kJngEYEJ6z5T7";
+
 passport.use(new GoogleStrategy({
-        clientID: process.env.GOOGLE_CLIENT_ID,
-        clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+        clientID: GOOGLE_CLIENT_ID,
+        clientSecret: GOOGLE_CLIENT_SECRET,
         callbackURL: "http://localhost:3000/auth/google/callback",
         passReqToCallback: true
     },
     function(request, accessToken, refreshToken, profile, done) {
-        queries.getAllUsersByIdAndGoogleProfileId()
+      return knex('users').where('id', profile.id)
             .then(function(user) {
                 if (user.length > 0) {
                     console.log('It worked and didnt add a new user')
                     return done(null, user)
                 } else {
                     console.log("it added a new user", user.length)
-                    return knex('googleAuth').insert({
+                    return knex('users').insert({
                             id: profile.id,
                             token: accessToken,
                             name: profile.displayName,
@@ -44,12 +49,12 @@ passport.use(new GoogleStrategy({
         // to associate the Google account with a user record in your database,
         // and return that user instead.
         return done(null, profile);
-        // });
+
     }
 ));
 
 module.exports = {
-  passport:passport,
+  passport: passport,
 
   //route middleware to ensure user is authenticated
   ensureAuthenticated: function(req, res, next) {
